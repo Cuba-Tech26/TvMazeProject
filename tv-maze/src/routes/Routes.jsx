@@ -29,10 +29,7 @@ export default function Routes() {
           path: "/tvshows",
           element: <Tvshows />,
         },
-        // {
-        //   path: "*",
-        //   element: <Error />,
-        // },
+        
       ],
     },
   ]);

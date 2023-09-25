@@ -8,7 +8,7 @@ export default function Navbar() {
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate()
-  console.log(searchQuery);
+  
 
   const handleSubmit = (e) =>{
     e.preventDefault()
@@ -47,7 +47,7 @@ export default function Navbar() {
             placeholder="Search tv..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="position-absolute top-50 start-50 translate-middle"
+            className="position-absolute top-50 start-50 translate-middle rounded-3"
           />
 
           <AiOutlineClose

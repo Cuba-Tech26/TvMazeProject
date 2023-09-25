@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Image } from "react-bootstrap";
 
 export default function TvCard({ myData }) {
-  console.log("TvCard", myData);
+  
   return (
     <Link to={`/tvshows/${myData.id}`}>
       <Image src={myData?.image?.original} className="tvcard" />

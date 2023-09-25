@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Image, Row, Col } from "react-bootstrap";
+import { Image, Row, Col, Carousel, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Loader from "../utils/Loader";
 import TvCard from "../components/TvCard";
 
 export default function Home() {
-  //three stages to manage or account for when fetching a data from api in react
+  //three stages to manage account for when fetching a data from api in react
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState([false]);
   const [error, setError] = useState(null);
@@ -28,10 +28,8 @@ export default function Home() {
     };
     fetchTv();
   }, []);
-  console.log("data", data);
+
   const filterRating = data.filter((show) => show.rating.average >= 8.9);
-  console.log(filterRating);
-  console.log(current);
 
   if (error) return <p className="mt-5 py-5">{error.message}</p>;
   return (
@@ -39,69 +37,78 @@ export default function Home() {
       {loading ? (
         <Loader />
       ) : (
-        <>
-        <div className="d-lg-flex">
-          <Container className="py-4">
-            {filterRating.slice(0, 3).map((show, index) => (
-              <>
-                <div
-                  key={show.id}
-                  className={
-                    index === current ? "bgColorA text-white p-1" : "textColor"
-                  }
-                  type="button"
-                >
-                  <h1
-                    className="text-uppercase"
-                    onClick={() => setCurrent(index)}
+        <section className="d-lg-flex first-Con">
+          <Container className="container pt-4 first-Con">
+            <h1 className="text-white text-uppercase fw-bold mt-3">
+              Top Trending movies
+            </h1>
+            {
+              <Carousel
+                controls={false}
+                indicators={false}
+                activeIndex={current}
+                onSelect={(index) => setCurrent(index)}
+              >
+                {filterRating.slice(0, 3).map((show, index) => (
+                  <Carousel.Item
+                    key={show.id}
+                    className={
+                      index === current ? "text-white p-1" : "text-white"
+                    }
                   >
-                    {show.name}
-                  </h1>
-                </div>
-                <hr />
-              </>
-            ))}
+                    <h3 className="text-capitalize mt-5">{show.name}</h3>
+                  </Carousel.Item>
+                ))}
+              </Carousel>
+            }
           </Container>
-          <Container className="bgColorB py-4 text-white">
-            {filterRating.slice(0, 3).map((show, index) => (
-              <div key={show.id}>
-                {index === current && (
-                  <>
-                    <hi className="fs-5 fw-bold">{show.name}</hi>
-                    <p
-                      dangerouslySetInnerHTML={{
-                        __html: show.summary.slice(0, 200) + "...",
-                      }}
-                    />
-                    <Link to={`/tvshows/${show.id}`}>See more</Link>
-                  </>
-                )}
-              </div>
-            ))}
+
+          <Container className=" container bgColorB py-4 text-white">
+            <Carousel controls={false} indicators={false}>
+              {filterRating.slice(0, 3).map((show, index) => (
+                <Carousel.Item key={show.id}>
+                  {index === current && (
+                    <>
+                      <div>
+                        <h1 className="text-warning">{show.name}</h1>
+                        <p
+                          dangerouslySetInnerHTML={{
+                            __html: show.summary.slice(0, 200) + `...`,
+                          }}
+                        ></p>
+                      </div>
+                    </>
+                  )}
+                  <Link to={`/tvshows/${show.id}`}>See more</Link>
+                </Carousel.Item>
+              ))}
+            </Carousel>
           </Container>
-          <Container className="p-0">
-            {filterRating.slice(0, 3).map((show, index) => (
-              <div key={show.id}>
-                {index === current && (
-                  <div className="imgBox">
-                    <Image src={show.image.original} className="w-100 h-100" />
-                  </div>
-                )}
-              </div>
-            ))}
+
+          <Container className="container">
+            <Carousel controls={false} indicators={false}>
+              {filterRating.slice(0, 3).map((show, index) => (
+                <Carousel.Item
+                  key={show.id}
+                  className={index === current ? " text-white " : "textColor"}
+                >
+                  <Image src={show.image.original} className=" w-100 h-100" />
+                </Carousel.Item>
+              ))}
+            </Carousel>
           </Container>
-        </div>
-        <Container className="mt-5  py-3">
-           <Row>
-            {data.slice(0, 30).map((show)=> (
-              <Col key={show.id} xs={6} md={4} lg={3}>
-                <TvCard myData={show}/>
-              </Col>
-            ))}
-           </Row>
-        </Container>
-        </>
+        </section>
       )}
+
+      <div className="py-3 mt-3 ">
+        <Row activeIndex={current}>
+          {data.slice(0, 30).map((show) => (
+            <Col key={show.id} xs={6} md={4} lg={3}>
+              <TvCard myData={show} />
+            </Col>
+          ))}
+        </Row>
+      </div>
     </>
   );
 }
